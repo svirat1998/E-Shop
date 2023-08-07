@@ -3,13 +3,12 @@
 
 import ErrorHandler from "../utils/ErrorHandler.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
-
 import Withdraw from "../model/withdraw.js";
 import sendMail from "../utils/sendMail.js";
 import User from "../model/user.js";
 
 
-// create withdraw request --- only for seller
+// create withdraw request --- only for admin
 
    export const createWithdraw=catchAsyncErrors(async (req, res, next) => {
     try {
@@ -83,7 +82,7 @@ import User from "../model/user.js";
         { new: true }
       );
 
-      const user = await Shop.findById(userId);
+      const user = await User.findById(userId);
 
       const transection = {
         _id: withdraw._id,

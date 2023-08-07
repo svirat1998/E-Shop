@@ -130,7 +130,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           </div>
         </div>
         <img
-          // src={`${data?.images[0]?.url}`}
+          src={`${data?.images[0]?.url}`}
           // src={`${data?.images[0]?.url}`}
           
           alt=""

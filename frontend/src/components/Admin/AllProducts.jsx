@@ -2,15 +2,13 @@ import { Button } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import React, { useEffect } from "react";
 import {  AiOutlineEye,AiOutlineDelete } from "react-icons/ai";
-// import { useDispatch, useSelector } from "react-redux";
+
 import { Link } from "react-router-dom";
-// import { getAllProductsShop } from "../../redux/actions/product";
-// import { deleteProduct } from "../../redux/actions/product";
-// import Loader from "../Layout/Loader";
+
 import axios from "axios";
 import { server } from "../../server";
 import { useState } from "react";
-// import { EditSharp } from "@material-ui/icons";
+import { toast } from "react-toastify";
 
 
 const AllProducts = () => {
@@ -22,7 +20,13 @@ const AllProducts = () => {
     })
   }, []);
 
-  const handleDelete = () =>{}
+  const handleDelete = (id) =>{
+    axios.delete(`${server}/product/delete-product/${id}`,{withCredentials: true}).then((res) => {
+      toast.success("Product deleted succesfully!")
+    })
+    window.location.reload();
+    
+  }
 
   const columns = [
     { field: "id", headerName: "Product Id", minWidth: 200, flex: 0.5 },

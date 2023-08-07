@@ -9,7 +9,7 @@ const AdminWithDrawMoneyPage = () => {
         <AdminHeader />
       <div className="flex items-center justify-between w-full">
        <div className="w-[80px] 800px:w-[330px]">
-      <AdminSideBar  />
+      <AdminSideBar  active={8}/>
       
       
     </div>

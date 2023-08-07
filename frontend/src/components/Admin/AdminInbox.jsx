@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { server } from "../../server";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import styles from "../../styles/styles";
@@ -15,7 +15,7 @@ const ENDPOINT = "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const AdminInbox = () => {
-  const { seller,isLoading } = useSelector((state) => state.seller);
+  const { user,isLoading } = useSelector((state) => state.user);
   const [conversations, setConversations] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [currentChat, setCurrentChat] = useState();
@@ -48,7 +48,7 @@ const AdminInbox = () => {
     const getConversation = async () => {
       try {
         const resonse = await axios.get(
-          `${server}/conversation/get-all-conversation-seller/${seller?._id}`,
+          `${server}/conversation/get-all-conversation-admin/${user?._id}`,
           {
             withCredentials: true,
           }
@@ -60,20 +60,20 @@ const AdminInbox = () => {
       }
     };
     getConversation();
-  }, [seller, messages]);
+  }, [user, messages]);
 
   useEffect(() => {
-    if (seller) {
-      const sellerId = seller?._id;
-      socketId.emit("addUser", sellerId);
+    if (user) {
+      const userId = user?._id;
+      socketId.emit("addUser", userId);
       socketId.on("getUsers", (data) => {
         setOnlineUsers(data);
       });
     }
-  }, [seller]);
+  }, [user]);
 
   const onlineCheck = (chat) => {
-    const chatMembers = chat.members.find((member) => member !== seller?._id);
+    const chatMembers = chat.members.find((member) => member !== user?._id);
     const online = onlineUsers.find((user) => user.userId === chatMembers);
 
     return online ? true : false;
@@ -99,17 +99,17 @@ const AdminInbox = () => {
     e.preventDefault();
 
     const message = {
-      sender: seller._id,
+      sender: user._id,
       text: newMessage,
       conversationId: currentChat._id,
     };
 
     const receiverId = currentChat.members.find(
-      (member) => member.id !== seller._id
+      (member) => member.id !== user._id
     );
 
     socketId.emit("sendMessage", {
-      senderId: seller._id,
+      senderId: user._id,
       receiverId,
       text: newMessage,
     });
@@ -134,13 +134,13 @@ const AdminInbox = () => {
   const updateLastMessage = async () => {
     socketId.emit("updateLastMessage", {
       lastMessage: newMessage,
-      lastMessageId: seller._id,
+      lastMessageId: user._id,
     });
 
     await axios
       .put(`${server}/conversation/update-last-message/${currentChat._id}`, {
         lastMessage: newMessage,
-        lastMessageId: seller._id,
+        lastMessageId: user._id,
       })
       .then((res) => {
         console.log(res.data.conversation);
@@ -166,11 +166,11 @@ const AdminInbox = () => {
 
   const imageSendingHandler = async (e) => {
     const receiverId = currentChat.members.find(
-      (member) => member !== seller._id
+      (member) => member !== user._id
     );
 
     socketId.emit("sendMessage", {
-      senderId: seller._id,
+      senderId: user._id,
       receiverId,
       images: e,
     });
@@ -179,7 +179,7 @@ const AdminInbox = () => {
       await axios
         .post(`${server}/message/create-new-message`, {
           images: e,
-          sender: seller._id,
+          sender: user._id,
           text: newMessage,
           conversationId: currentChat._id,
         })
@@ -198,7 +198,7 @@ const AdminInbox = () => {
       `${server}/conversation/update-last-message/${currentChat._id}`,
       {
         lastMessage: "Photo",
-        lastMessageId: seller._id,
+        lastMessageId: user._id,
       }
     );
   };
@@ -223,7 +223,7 @@ const AdminInbox = () => {
                 index={index}
                 setOpen={setOpen}
                 setCurrentChat={setCurrentChat}
-                me={seller._id}
+                me={user._id}
                 setUserData={setUserData}
                 userData={userData}
                 online={onlineCheck(item)}
@@ -235,13 +235,13 @@ const AdminInbox = () => {
       )}
 
       {open && (
-        <SellerInbox
+        <UserInbox
           setOpen={setOpen}
           newMessage={newMessage}
           setNewMessage={setNewMessage}
           sendMessageHandler={sendMessageHandler}
           messages={messages}
-          sellerId={seller._id}
+          sellerId={user._id}
           userData={userData}
           activeStatus={activeStatus}
           scrollRef={scrollRef}
@@ -325,14 +325,14 @@ const MessageList = ({
   );
 };
 
-const SellerInbox = ({
+const UserInbox = ({
   scrollRef,
   setOpen,
   newMessage,
   setNewMessage,
   sendMessageHandler,
   messages,
-  sellerId,
+  userId,
   userData,
   activeStatus,
   handleImageUpload,
@@ -366,11 +366,11 @@ const SellerInbox = ({
             return (
               <div
                 className={`flex w-full my-2 ${
-                  item.sender === sellerId ? "justify-end" : "justify-start"
+                  item.sender === userId ? "justify-end" : "justify-start"
                 }`}
                 ref={scrollRef}
               >
-                {item.sender !== sellerId && (
+                {item.sender !== userId && (
                   <img
                     src={`${userData?.avatar?.url}`}
                     className="w-[40px] h-[40px] rounded-full mr-3"
@@ -388,7 +388,7 @@ const SellerInbox = ({
                   <div>
                     <div
                       className={`w-max p-2 rounded ${
-                        item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"
+                        item.sender === userId ? "bg-[#000]" : "bg-[#38c776]"
                       } text-[#fff] h-min`}
                     >
                       <p>{item.text}</p>

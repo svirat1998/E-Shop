@@ -7,7 +7,7 @@ const router =express.Router();
 router.post("/create-event",createEvent);
 router.get("/get-all-events",getAllEvent);
 router.get("/get-all-events/:id",getAllEventId);
-router.delete("/delete-shop-event/:id",deleteEvent);
+router.delete("/delete-event/:id",deleteEvent);
 router.get("/admin-all-events",  isAuthenticated,isAdmin("Admin"),getAllEventAdmin);
 
 export default router

@@ -54,6 +54,30 @@ export const getAllProductsShop = (id) => async (dispatch) => {
   }
 };
 
+// get All Products of a Admin
+export const getAllProductsAdmin = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "getAllProductsAdminRequest",
+    });
+
+    const { data } = await axios.get(
+      `${server}/product/admin-all-products`
+    );
+    dispatch({
+      type: "getAllProductsAdminSuccess",
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAllProductsAdminFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+
+
 // delete product of a shop
 export const deleteProduct = (id) => async (dispatch) => {
   try {
@@ -87,7 +111,9 @@ export const getAllProducts = () => async (dispatch) => {
       type: "getAllProductsRequest",
     });
 
-    const { data } = await axios.get(`${server}/product/get-all-products`);
+    const { data } = await axios.get(`${server}/product/get-all-products`,{
+      withCredentials: true,
+    });
     dispatch({
       type: "getAllProductsSuccess",
       payload: data.products,

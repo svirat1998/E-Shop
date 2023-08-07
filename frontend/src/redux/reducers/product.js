@@ -19,15 +19,15 @@ export const productReducer = createReducer(initialState, {
     state.success = false;
   },
 
-  // get all products of shop
-  getAllProductsShopRequest: (state) => {
+  // get all products of Admin
+  getAllProductsAdminRequest: (state) => {
     state.isLoading = true;
   },
-  getAllProductsShopSuccess: (state, action) => {
+  getAllProductsAdminSuccess: (state, action) => {
     state.isLoading = false;
     state.products = action.payload;
   },
-  getAllProductsShopFailed: (state, action) => {
+  getAllProductsAdminFailed: (state, action) => {
     state.isLoading = false;
     state.error = action.payload;
   },

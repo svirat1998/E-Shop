@@ -1,6 +1,3 @@
-
-
-import express  from "express";
 import User from "../model/user.js"
 import cloudinary from "cloudinary";
 import ErrorHandler from "../utils/ErrorHandler.js"
@@ -269,6 +266,21 @@ export const updateUserAvatar = catchAsyncErrors(async(req,res,next)=>{
 })
 
 
+// all users --- for admin
+
+export const allUser = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const users = await User.find().sort({
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+})
 
 // update user addresses
 

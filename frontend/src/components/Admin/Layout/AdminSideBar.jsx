@@ -66,7 +66,7 @@ const AdminSideBar = ({ active }) => {
 
 
       <div className="w-full flex items-center p-4">
-        <Link to="/admin-users" className="w-full flex items-center">
+        <Link to="/admin-create-event" className="w-full flex items-center">
           <VscNewFile
             size={30}
             color={`${active === 4 ? "crimson" : "#555"}`}
@@ -161,7 +161,7 @@ const AdminSideBar = ({ active }) => {
               active === 9 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            Shop Inbox
+             Admin Inbox
           </h5>
         </Link>
       </div>
